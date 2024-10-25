@@ -70,12 +70,15 @@ public class BasicConnectionPool  {
         //todo#4 작업을 완료한 Connection 객체를 Connection Pool에 반납 합니다.
         synchronized (this) {
             connections.offer(connection);
+            notifyAll();
         }
     }
 
     public int getUsedConnectionSize(){
         //todo#5 현재 사용중인 Connection 객체 수를 반환합니다.
-        return maximumPoolSize - connections.size();
+        synchronized (this) {
+            return maximumPoolSize - connections.size();
+        }
     }
 
     public void distory() throws SQLException {
